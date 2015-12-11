@@ -4,7 +4,8 @@ from random import randint, random
 from markov import markov as mkv
 
 def simulate():
-	basic()
+	feedback()
+	# basic()
 	# if(utl.runBasic)
 	# 	for i in range(utl.basicSimulation):
 	# 		basic()
@@ -71,11 +72,11 @@ def find_bestT(S):
 
 	return [dBest, tBest]
 
-def actualCost(t, S):
-	cost = 0
-	for s in range(s_count):
-		cost += S[s][t]
-	return cost
+# def actualCost(t, S):
+# 	cost = 0
+# 	for s in range(s_count):
+# 		cost += S[s][t]
+# 	return cost
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
@@ -86,37 +87,40 @@ def feedback():
 	#initialization
 	S = init()
 	S_p = equalize_schedules(3,np.copy(S))
-	tBest = find_bestT(S_p)
-	
+	best = find_bestT(S_p)
+	dBest = best[0]
+	tBest = best[1]
 
 	for i in range(utl.modifications):
 		#random modifications and determining if we should consider changing our solution
-		evaluate = timeSlotModification(tBest, S)
+		evaluate = timeSlotModification( dBest, tBest, S )
 		if(evaluate):
 			S_p = equalize_schedules(3,np.copy(S))
-			tBest = find_bestT(S_p)
+			best = find_bestT(S_p)
 	
 		print S
 		print tBest
+	
 	print '-------------------------------------------'
 	print tBest
 
 #this randomly chooses both a schedule and a time-slot to modify 
-def timeSlotModification(tBest, S):
+def timeSlotModification(dBest, tBest, S):
 	#random schedule selection
-	sMod = randint( 0, utl.sCount - 1 )
-	tMod = randint( 0, utl.tCount - 1 )
-	oldVal = S[sMod][tMod]
-	newVal = S[sMod][tMod] = random()*(utl.wMax - utl.wMin) + utl.wMin 
+	sMod = randint( 0, utl.s_count - 1 )
+	dMod = randint( 0, utl.d_count - 1 )
+	tMod = randint( 0, utl.t_count - 1 )
+	oldVal = S[sMod][dMod][tMod]
+	newVal = S[sMod][dMod][tMod] = random()*(utl.wMax - utl.wMin) + utl.wMin 
 	 
 	
 	#if the timeslot being modified tMod is tBest, and there is an increase in the constraint violation [weight goes up]
-	if (tBest == tMod) and ((newVal - oldVal) > 0):
+	if dBest == dMod and (tBest == tMod) and ((newVal - oldVal) > 0):
 		#we need to re-evaluate our solution as an increase in tMod=tBest, means tBest may no longer be optimal
 		return True
 
 	#if the timeslot being modified tMod is not tBest, and there is an decrease in the constraint violation [weight goes down]
-	if (tBest != tMod) and ((newVal - oldVal) < 0):
+	if not(dBest == dMod and tBest == tMod) and ((newVal - oldVal) < 0):
 		#we need to re-evaluate as a decrease in any other value other than tBest means that this value tMod can replace tBest
 		return True		
 
