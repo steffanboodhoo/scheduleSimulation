@@ -1,46 +1,47 @@
 import numpy as np
 import utils as utl
 from random import randint, random
+from markov import markov as mkv
 
 def simulate():
-	if(utl.runBasic)
-		for i in range(utl.basicSimulation):
-			basic()
-	if(utl.runFeedback)
-		for i in range(utl.feedbackSimulation):
-			feedback()
+	basic()
+	# if(utl.runBasic)
+	# 	for i in range(utl.basicSimulation):
+	# 		basic()
+	# if(utl.runFeedback)
+	# 	for i in range(utl.feedbackSimulation):
+	# 		feedback()
+
 
 def basic():
 	#initialization
 	S = init()
 	print S #uncomment to view initial schedules
-	tBest = find_bestT(S)
-	print 'Normal tBest :',tBest
+	best = find_bestT(S)
+	print 'Normal best day and time :',best
 	#changing the weights of the schedules to give equal influence
 	S_p = equalize_schedules(3,np.copy(S))
 	print S_p #uncomment to view equalized schedules
-	tBest = find_bestT(S_p)
-	print 'Equalized tBest :',tBest
+	best = find_bestT(S_p)
+	print 'Equalized best day and time :',best
 	print '-------------------------------------------'
 	
 
 #initialize arrays to random values indicate the weighted constraints of each hour
 def init(): 
-	#create array of sCount schedules with tCount timeslots initialized with a random float between 0,1
-	S = np.random.random((utl.sCount,utl.tCount))
-	#convert the schedules random float between 0,1 to wMin,wMax
-	S = S*( utl.wMax - utl.wMin) + utl.wMin
-	#return the array
+	S = mkv.init(utl.s_count, utl.d_count, utl.t_count)
 	return S
 
 #scale weights according to their average constraint weight so it becomes abstract_mu
 def equalize_schedules(abstract_mu, S):
 	#s is an index representing a schedule in S
-	for s in range(utl.sCount):
+	for s in range(utl.s_count):
 		#find the average constraint weight
-		mu_s = np.sum(S[s]) / utl.tCount
-		#create value to scale each weight
+		mu_s = np.sum(S[s]) / (utl.t_count * utl.d_count)
+
+		#create value to scale each weight 
 		scale = abstract_mu / mu_s
+
 		#scale weight
 		S[s] = S[s] * scale
 	#return the equalized schedules
@@ -48,26 +49,31 @@ def equalize_schedules(abstract_mu, S):
 
 #find the Tbest given the equalized schedules
 def find_bestT(S):	
+	dBest = 0
 	tBest = 0
-	tVal = utl.wMax * utl.tCount
-	#for every time slot, t, in a schedule
-	for t in range(utl.tCount):
-		constraint_t = 0
-		#for every schedule s
-		for s in range(utl.sCount):
-			#sum all the constraints at time t
-			constraint_t += S[s][t] 
+	tVal = utl.wMax * utl.t_count
 
-		#if the sum of constraints violated is less than the currrent smallest
-		if( constraint_t < tVal ):
-			tVal = constraint_t #make current best
-			tBest = t           #save the best timeslot index
+	#for every day d in the schedule
+	for d in range(utl.d_count):
+		#for every time slot, t, in a day
+		for t in range(utl.t_count):
+			constraint_t = 0
+			#for every schedule s
+			for s in range(utl.s_count):
+				#sum all the constraints at time t
+				constraint_t += S[s][d][t] 
 
-	return tBest
+			#if the sum of constraints violated is less than the currrent smallest
+			if( constraint_t < tVal ):
+				tVal = constraint_t #make current best
+				tBest = t           #save the best timeslot index
+				dBest = d
+
+	return [dBest, tBest]
 
 def actualCost(t, S):
 	cost = 0
-	for s in range(sCount):
+	for s in range(s_count):
 		cost += S[s][t]
 	return cost
 #---------------------------------------------------------------------------------------------------

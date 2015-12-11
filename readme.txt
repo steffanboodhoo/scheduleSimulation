@@ -56,3 +56,7 @@ wMin 			-			Minimum Weight Constraint
 basicSimulation 		-	Number of times you want to run the basic simulation
 feedbackSimulation		- 	Number of times you want to run the feedback simulation
 modifications = 10		-	Number of times you want to modify the schedules in ONE feedback simulation
+
+
+generate schedule based on markov chain
+use an entire week, per hour basis
