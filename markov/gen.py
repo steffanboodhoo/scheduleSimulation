@@ -16,7 +16,6 @@ def gen(S, method, s_count, d_count, t_count):
 		for d in range(d_count):
 			for t in range(t_count):
 				state = S[s][d][t]
-				print state
 				if method == utl.gen_method_1:
 					S[s][d][t] = method_1(state)
 				# else:

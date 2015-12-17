@@ -25,7 +25,7 @@ def init(s_count, d_count, t_count):
 def generateStates( S, s_count, d_count, t_count):
 	count = 0
 	for s in range(s_count):
-		for d in range(s_count): # a new day
+		for d in range(d_count): # a new day
 			t = 0
 			S[s][d][t] = getInitialState()	
 			t += 1
