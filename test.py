@@ -103,11 +103,12 @@ def basic():
 		S_p = equalize_schedules(3,np.copy(P[1]))
 		best = find_bestT(S_p)
 		#make the event official
-		addToEvents(Events, best[0], best[1], 10, P[0])
+		original_weights = {}
 		for s in P[1]:
 			print s[best[0]][best[1]] 
 			s[best[0]][best[1]] = 10.0
-		
+
+		addToEvents(Events, best[0], best[1], 10, P[0])
 		print best
 		print '-----------\n'
 	pprint(Events)
@@ -116,7 +117,7 @@ def basic():
 	# print 'Equalized best day and time :',best
 	# print '-------------------------------------------'
 
-	
+
 def feedback():
 	#initialization
 	S = init()
