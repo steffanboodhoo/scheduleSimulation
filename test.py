@@ -1,23 +1,21 @@
 import numpy as np
 import utils as utl
+import initialization as ini
+import event as ev
 from random import randint, random
-from markov import markov as mkv
 from pprint import pprint
 
 def simulate():
-	feedback()
-	# basic()
-	# if(utl.runBasic)
-	# 	for i in range(utl.basicSimulation):
-	# 		basic()
-	# if(utl.runFeedback)
-	# 	for i in range(utl.feedbackSimulation):
-	# 		feedback()
+# 	feedback()
+	basic()
+# 	# if(utl.runBasic)
+# 	# 	for i in range(utl.basicSimulation):
+# 	# 		basic()
+# 	# if(utl.runFeedback)
+# 	# 	for i in range(utl.feedbackSimulation):
+# 	# 		feedback()
 
-#initialize arrays to random values indicate the weighted constraints of each hour
-def init(): 
-	S = mkv.init(utl.s_count, utl.d_count, utl.t_count)
-	return S
+
 
 #scale weights according to their average constraint weight so it becomes abstract_mu
 def equalize_schedules(abstract_mu, S):
@@ -58,22 +56,14 @@ def find_bestT(S):
 
 	return [dBest, tBest]
 
-def addToEvents(Events, day, hour, weight, participants):
-	if not(day in Events):
-		Events[day]={}
-	Events[day][hour] = {'weight':weight,'participants':participants}
 
-def checkForMeeting(Events, day, hour):
-	if day in Events and hour in Events[day]:
-		return True
-	return False
 
 # def actualCost(t, S):
 # 	cost = 0
 # 	for s in range(s_count):
 # 		cost += S[s][t]
 # 	return cost
-#---------------------------------------------------------------------------------------------------
+#--------------S-------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
 
@@ -81,41 +71,34 @@ def checkForMeeting(Events, day, hour):
 as this is to purely observe the FEEDBACK functionality''' 
 
 
-def selectParticipants(n,S):
-	participants = []
-	indicies = []
-	for i in range(n):
-		indicies.append( randint(0 , utl.s_count -1 ) ) 
-		p = S[ indicies[i] ]
-		participants.append( p )
 
-	return [indicies, participants]
 
 def basic():
 	#initialization
-	S = init()
+	S = ini.init()
+	pprint(S)
 	Events = {}
-	#at this point we are going to schedule a set of meetings/Events based off of the set of schedules in S
-	#changing the weights of the schedules to give equal influence
-	for i in range(utl.Event_num):#number of events being created
-		P = selectParticipants(4,S)
-		#find the best
-		S_p = equalize_schedules(3,np.copy(P[1]))
-		best = find_bestT(S_p)
-		#make the event official
-		original_weights = {}
-		for s in P[1]:
-			print s[best[0]][best[1]] 
-			s[best[0]][best[1]] = 10.0
+	# #at this point we are going to schedule a set of meetings/Events based off of the set of schedules in S
+	# #changing the weights of the schedules to give equal influence
+	# for i in range(utl.Event_num):#number of events being created
+	# 	P = selectParticipants(4,S)
+	# 	#find the best
+	# 	S_p = equalize_schedules(3,np.copy(P[1]))
+	# 	best = find_bestT(S_p)
+	# 	#make the event official
+	# 	original_weights = {}
+	# 	for s in P[1]:
+	# 		print s[best[0]][best[1]] 
+	# 		s[best[0]][best[1]] = 10.0
 
-		addToEvents(Events, best[0], best[1], 10, P[0])
-		print best
-		print '-----------\n'
-	pprint(Events)
-	# print S_p #uncomment to view equalized schedules
-	# best = find_bestT(S_p)
-	# print 'Equalized best day and time :',best
-	# print '-------------------------------------------'
+	# 	addToEvents(Events, best[0], best[1], 10, P[0])
+	# 	print best
+	# 	print '-----------\n'
+	# pprint(Events)
+	# # print S_p #uncomment to view equalized schedules
+	# # best = find_bestT(S_p)
+	# # print 'Equalized best day and time :',best
+	# # print '-------------------------------------------'
 
 
 def feedback():

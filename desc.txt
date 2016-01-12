@@ -1,0 +1,19 @@
+Initialization - 
+
+This is where the schedules are either created or loaded. A 3d array is returned [person][day][time]
+
+Normalization - 
+
+This is where the schedules are normalized
+
+Create schedule - 
+
+a set of n persons is randomly selected
+and the best day/time is selected using find_bestT()
+
+Feedback
+
+When a change occurs in a person's schedule what happens:
+	Get all events that the person belong to.
+	For each event evaluate the best time Using find_bestT() [once it's needed]
+	 

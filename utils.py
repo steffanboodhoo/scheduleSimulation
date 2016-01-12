@@ -1,6 +1,6 @@
-s_count = 10
-d_count = 5
-t_count = 12
+s_count = 4
+d_count = 2
+t_count = 3
 
 wMax = 10
 wMin = 0

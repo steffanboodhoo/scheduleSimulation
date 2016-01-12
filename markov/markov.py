@@ -17,6 +17,7 @@ from random import randint, random
 import gen as g
 
 def init(s_count, d_count, t_count):
+	
 	S = np.zeros( (s_count, d_count, t_count) )
 	S = generateStates( S, s_count, d_count, t_count)
 	S = generateWeights(S, s_count, d_count, t_count)
