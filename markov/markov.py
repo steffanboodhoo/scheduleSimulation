@@ -11,21 +11,23 @@ then the
 '''
 
 import utils as utl 
-
+from pprint import pprint
 import numpy as np
 from random import randint, random
 import gen as g
 
 def init(s_count, d_count, t_count):
+	S = {}
+	for i in range(s_count):
+		S[str(i)] = np.zeros( (d_count,t_count) ) 
 	
-	S = np.zeros( (s_count, d_count, t_count) )
 	S = generateStates( S, s_count, d_count, t_count)
 	S = generateWeights(S, s_count, d_count, t_count)
 	return S
 
 def generateStates( S, s_count, d_count, t_count):
 	count = 0
-	for s in range(s_count):
+	for s in S:
 		for d in range(d_count): # a new day
 			t = 0
 			S[s][d][t] = getInitialState()	

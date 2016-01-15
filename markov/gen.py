@@ -12,7 +12,7 @@ import utils as utl
 import numpy as np
 
 def gen(S, method, s_count, d_count, t_count):
-	for s in range(s_count):
+	for s in S:
 		for d in range(d_count):
 			for t in range(t_count):
 				state = S[s][d][t]

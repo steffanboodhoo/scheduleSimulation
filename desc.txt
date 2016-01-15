@@ -17,3 +17,36 @@ When a change occurs in a person's schedule what happens:
 	Get all events that the person belong to.
 	For each event evaluate the best time Using find_bestT() [once it's needed]
 	 
+
+Events
+{	
+	'event_id':{
+				'day':<day>,
+				'slot':<slot>,
+				'members':{
+							<member_id> : <original_weight>,
+							<member_id> : <original_weight>,
+							...
+							}
+				}
+}
+
+Mapping
+{
+	<member_id>:[<event_id>, <event_id>, ...],
+	<member_id>:[<event_id>, <event_id>, ...],
+	...
+}
+
+
+while( queue not empty )
+	c_event = dequeue()
+	checkEvent(c_event)
+
+given an event_id, a list of members affected 
+	for each member get all the events they belong to
+	for every event 
+		find the best_time
+		if the new best_time better != current best_time
+			put event in queue 
+
