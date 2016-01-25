@@ -1,11 +1,11 @@
-s_count = 4
-d_count = 2
-t_count = 3
+s_count = 10
+d_count = 1
+t_count = 12
 
 wMax = 10
 wMin = 0
 
-Event_num = 5
+Event_num = 4
 
 basicSimulation = 10
 modifications = 10

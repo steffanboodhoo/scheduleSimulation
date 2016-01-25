@@ -4,6 +4,8 @@ import initialization as ini
 import event as ev
 from random import randint, random
 from pprint import pprint
+import optimumsol as opt
+import time
 
 def simulate():
 	basic()
@@ -15,32 +17,45 @@ def simulate():
 	# 		feedback()
 
 def basic():
-	#initialization
+	#INITIALIZATION
+	#schedules initialization
 	S = ini.init()
-	mapp = {} 
+	#map initialization
+	mapp = {}
+	for user_id in S:
+		mapp[user_id] = []
+	
 	#loop to create an event and do feedback
-	pprint(S)
+	# pprint(S)
 	events = ev.generateEvents(S,mapp)
-	pprint(S)
+	pprint(events)
+	# pprint(S)
+	# pprint(mapp)
+	opt.globalOptimum(S,events)
+	# modifications( S, events, mapp)
 
 
-def feedback(userId, day, slot, events, mapping):
+def modifications(S, events, mapp):
 	#get all events that this user belongs to
 	events = mapping[userId]
 
 
-def fix_weights(event, S, newDay, newSlot):
+def fix_weights(event, S, newDay, newSlot, e_id):
 	members = event['members']
 	for m in members:
 		#revert the weight in the person's schedule to what it was before this was assigned
 		S[m] [ event['day'] ] [ event['slot'] ] = members[m]
 
-		#save the old weight of the new day / slot of user so we can revert if needed
-		event['members'][m] = S[m] [newDay] [newSlot]
-
-		#set weight at new day / time of event
-		S[m] [newDay] [newSlot] = newWeight
-
+		#check to see if the event's weight is greater than the weight of the new best time in the user's schedule
+		if( event['weight'] > S[m] [newDay] [newSlot] ):
+			#save the old weight of the new day / slot of user so we can revert if needed
+			event['members'][m] = S[m] [newDay] [newSlot]
+			#set weight at new day / time of event
+			S[m] [newDay] [newSlot] = newWeight
+		else:
+			#remove event from mapping and user from event
+			event['members'].remove(m)
+			mapp[m].remove(e_id)
 
 	event['day'] = newDay
 	event['slot'] = newSlot
@@ -52,7 +67,7 @@ def handleEvent(S, events, e_id, mapp):
 	#if a different day and timeslot is chosen
 	if day != events[e_id]['day'] or slot != events[e_id]['slot']:
 		#revert the weights of the people in the event at e['day'] and e['slot'] then set the new e['day'] and e['slot'] and change the weights of the persons accordingly
-		fix_weights(event[e_id], S, nDay, nSlot)
+		fix_weights(event[e_id], S, nDay, nSlot, e_id)
 		
 		#since the weights of weights of all the members are changed all the events that these members belong too must be re-evaluated as well
 		for m_id in events[e_id]['members']:
@@ -105,7 +120,9 @@ def handleEvent(S, events, e_id, mapp):
 # 	return False #no re-evaluation needed
 
 if __name__ == '__main__':
+	start_time = time.time()
 	basic()
+	print("--- %s seconds ---" % (time.time() - start_time))
 
 '''
 	Some change in day, hour occurs,

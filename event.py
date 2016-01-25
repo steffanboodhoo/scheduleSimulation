@@ -6,10 +6,14 @@ import numpy as np
 def selectParticipants(n,S):
 	participants = []
 	user_ids = []
-	for i in range(n):
-		user_ids.append( str(randint(0 , utl.s_count -1 )) ) 
-		p = S[ user_ids[i] ]
-		participants.append( p )
+	i = 0 
+	while i<n:
+		u_id = str(randint(0 , utl.s_count -1 ))
+		if not (u_id in user_ids):
+			user_ids.append(u_id)
+			p = S[ u_id ]
+			participants.append( p )
+			i+=1
 
 	return [user_ids, participants]
 
@@ -29,7 +33,7 @@ def equalize_schedules(abstract_mu, S):
 	return S
 
 
-def createEvent(S,mapp):
+def createEvent(S,mapp,e_id):
 	event = {'members':[]}
 
 	#randomly select participants from S
@@ -44,11 +48,9 @@ def createEvent(S,mapp):
 	#make the event official
 	event['day'] = day
 	event['slot'] = slot
-
-	for user_id in user_ids:
-	 	event['members'].append({ user_id : S[user_id][day][slot] })
-		#generate a weight between the user's current weight and the maximum weight for the carded event
- 		S[user_id][day][slot] = random()*( utl.wMax - S[user_id][day][slot] ) + S[user_id][day][slot]
+	# event['weight'] = random()*(utl.wMax - utl.wMin) + utl.wMin
+	event['weight'] = randint(0, utl.wMax)
+	event['invited'] = user_ids
 
 	return event
 
@@ -57,12 +59,23 @@ def generateEvents(S,mapp):
 	Events = {}
 
 	for i in range(utl.Event_num):#number of events being created
-		Events[str(i)] = createEvent(S,mapp)
-		 
-	pprint(Events)
+		Events[str(i)] = createEvent(S,mapp,str(i))
+	
 	return Events
 
-
+def placeEvents(S,events,mapp):
+	for e_id in events:
+		event = events[e_id]
+		user_ids = event['invited']
+		for user_id in user_ids:
+			if( event['weight'] > S[user_id][day][slot] ):
+			 	event['members'].append({ user_id : S[user_id][day][slot] })
+				#PREVIOUSLY:generate a weight between the user's current weight and the maximum weight for the carded event # S[user_id][day][slot] = random()*( utl.wMax - S[user_id][day][slot] ) + S[user_id][day][slot]
+		 		#NOW use 1 weight for all users
+		 		S[user_id][day][slot] = event['weight']
+		 		mapp[user_id].append(e_id)
+		 	else:
+		 		print "did not take it"
 
 
 #find the Tbest given the equalized schedules
@@ -88,3 +101,4 @@ def find_bestT(S):
 				dBest = d
 
 	return [dBest, tBest]
+	
