@@ -50,3 +50,7 @@ given an event_id, a list of members affected
 		if the new best_time better != current best_time
 			put event in queue 
 
+[[ 4, 8, 7, 9, 5]
+[ 7, 5, 8, 6, 9]
+[ 6, 6, 3, 5, 7]
+[ 9, 3, 5, 4, 5]]

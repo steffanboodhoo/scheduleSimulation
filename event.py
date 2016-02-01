@@ -64,8 +64,11 @@ def generateEvents(S,mapp):
 	return Events
 
 def placeEvents(S,events,mapp):
+
 	for e_id in events:
 		event = events[e_id]
+		day = event['day']
+		slot = event['slot']
 		user_ids = event['invited']
 		for user_id in user_ids:
 			if( event['weight'] > S[user_id][day][slot] ):
@@ -76,6 +79,8 @@ def placeEvents(S,events,mapp):
 		 		mapp[user_id].append(e_id)
 		 	else:
 		 		print "did not take it"
+
+	return S
 
 
 #find the Tbest given the equalized schedules

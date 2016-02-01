@@ -32,11 +32,14 @@ def method_1(state):
 	l_2 = 8
 	h_2 = 10
 	if state == 0 :
-		return random()*( h_0 - l_0 ) + l_0
+		# return random()*( h_0 - l_0 ) + l_0
+		return randint(l_0, h_0)
 	if state == 1 :
-		return random()*( h_1 - l_1 ) + l_1
+		# return random()*( h_1 - l_1 ) + l_1
+		return randint(l_1, h_1)
 	if state == 2 :
-		return random()*( h_2 - l_2 ) + l_2
+		# return random()*( h_2 - l_2 ) + l_2
+		return randint(l_2, h_2)
 	print 'nothing worked'
 
 def method2(state):

@@ -5,7 +5,9 @@ import event as ev
 from random import randint, random
 from pprint import pprint
 import optimumsol as opt
+import copy
 import time
+import assignmentprob as ap
 
 def simulate():
 	basic()
@@ -28,10 +30,15 @@ def basic():
 	#loop to create an event and do feedback
 	# pprint(S)
 	events = ev.generateEvents(S,mapp)
+	# S_copy = S.copy()
+	S_copy = ev.placeEvents(copy.deepcopy(S), events, mapp)
+	pprint(S)
+	# pprint(S_copy)
 	pprint(events)
+	ap.assignment(S,events)
 	# pprint(S)
 	# pprint(mapp)
-	opt.globalOptimum(S,events)
+	# opt.globalOptimum(S,events)
 	# modifications( S, events, mapp)
 
 
